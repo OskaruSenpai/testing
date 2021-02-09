@@ -55,7 +55,7 @@ function LineChart(props) {
 			currentResolution,
 			renderNewData,
 		);
-	}, [startDate, endDate]);
+	}, [startDate, endDate, currentResolution]);
 
 	// Guard clause for empty data
 	if (data === undefined)
@@ -74,7 +74,14 @@ function LineChart(props) {
 			onTouchEnd={(e) => touchHandler}
 		>
 			<OptionsBar
-				buttonActions={{ showSummary, setResolution, setEndDate, setStartDate }}
+				buttonActions={{
+					showSummary,
+					setResolution,
+					setEndDate,
+					setStartDate,
+					updateData,
+					renderNewData,
+				}}
 				currentValues={{
 					summaryVisible,
 					startDate,
@@ -86,7 +93,11 @@ function LineChart(props) {
 				<Chart
 					option={options}
 					opts={{ renderer: 'svg' }}
-					style={{ height: '100%', width: '100%' }}
+					lazyUpdate={true}
+					style={{
+						height: '100%',
+						width: '100%',
+					}}
 				/>
 				{summaryVisible && (
 					<SummaryBlock

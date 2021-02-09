@@ -4,7 +4,14 @@ import { tagType, possibleResolutions, predefinedSections } from '../FakeData';
 export default function OptionsBar(props) {
 	const {
 		currentValues: { summaryVisible, startDate, endDate, currentResolution },
-		buttonActions: { showSummary, setResolution, setStartDate, setEndDate },
+		buttonActions: {
+			showSummary,
+			setResolution,
+			setStartDate,
+			setEndDate,
+			updateData,
+			renderNewData,
+		},
 	} = props;
 	const { production, consumption } = tagType;
 	return (
@@ -31,7 +38,7 @@ export default function OptionsBar(props) {
 			<select
 				value={currentResolution}
 				onChange={({ target: { value: v } }) => {
-					setResolution(v);
+					setResolution(parseInt(v));
 				}}
 			>
 				{Object.entries(possibleResolutions)
@@ -49,7 +56,18 @@ export default function OptionsBar(props) {
 			>
 				Summary
 			</button>
-			<button>Search</button>
+			<button
+				onClick={() => {
+					updateData(
+						startDate.getTime(),
+						endDate.getTime(),
+						currentResolution,
+						renderNewData,
+					);
+				}}
+			>
+				Search
+			</button>
 		</div>
 	);
 }

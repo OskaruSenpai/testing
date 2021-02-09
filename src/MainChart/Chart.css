@@ -20,10 +20,11 @@
 	border: 1px solid #c1c1c1;
 	padding: 5px;
 	background: none;
+	opacity: 0.8;
 }
 
 #options-bar *:hover {
-	background-color: red;
+	opacity: 1;
 }
 
 #options-bar *.active {
@@ -45,6 +46,8 @@
 
 #chart {
 	height: 100%;
+	width: 100%;
+	overflow: hidden;
 	display: grid;
 	grid-template-columns: 1fr min-content;
 	grid-template-rows: 1fr;

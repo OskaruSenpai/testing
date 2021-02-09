@@ -150,9 +150,10 @@ export function getOptionsTemplate(currentResolution, startDate, endDate) {
 			{
 				type: 'inside',
 				realtime: true,
-				start: 50,
+				xAxisIndex: 0,
+				// start: 50,
 				end: 100,
-				minValueSPan: 604800000,
+				minValueSpan: currentResolution * 7,
 			},
 		],
 		useUTC: true,

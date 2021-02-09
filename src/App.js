@@ -2,7 +2,7 @@ import EchartsDonut from './EchartsDonut';
 import EchartsLine from './MainChart/Chart';
 import './App.css';
 import { useState } from 'react';
-import { randomValueBetween, getBackEndData } from './FakeData';
+import { randomValueBetween } from './FakeData';
 
 export const getDistinctColor = (colorNum, colors) => {
 	return `hsl(${
@@ -17,8 +17,8 @@ function App() {
 		<>
 			<section>
 				<div id="donuts-container">
-					<EchartsDonut data={data3} unit="kW" desc="Power consumption" />
-					<EchartsDonut data={data4} unit="kW" desc="Power consumption" />
+					{/* <EchartsDonut data={data3} unit="kW" desc="Power consumption" />
+					<EchartsDonut data={data4} unit="kW" desc="Power consumption" /> */}
 				</div>
 				<div id="misc-info">
 					<button
@@ -35,12 +35,10 @@ function App() {
 					>
 						Update right donut
 					</button>
-					<button onClick={() => {}}>Update line data</button>
 				</div>
 			</section>
 			<section>
 				<EchartsLine />
-				{/* <VictoryLine data={lineData} startDate={dateStart} endDate={dateEnd} /> */}
 			</section>
 		</>
 	);
