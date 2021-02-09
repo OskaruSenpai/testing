@@ -1,38 +1,89 @@
-.App {
-  text-align: center;
+html,
+body,
+#root {
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+	user-select: none;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.donut-chart {
+	width: 50%;
+	display: inline-block;
+	position: relative;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.donut-chart > * {
+	position: absolute;
+	width: 100%;
+	height: 100%;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.donut-chart::after {
+	content: '';
+	padding-top: 100%;
+	display: block;
 }
 
-.App-link {
-  color: #61dafb;
+.donut-data {
+	height: 100%;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	position: absolute;
+	justify-content: center;
+	align-items: center;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.donut-data h1 {
+	font-weight: bold;
+	font-size: 5vmin;
+	padding-bottom: 0;
+	line-height: 1.2;
+	margin-bottom: 0;
+}
+
+.donut-data span {
+	font-size: 0.6em;
+	padding-bottom: 0;
+	padding-left: 0.15em;
+	line-height: 1.2;
+	margin-bottom: 0;
+}
+
+.donut-data p {
+	border-top: 1px solid #ccc;
+	margin-top: 0px;
+	font-size: 1.7vmin;
+	padding: 0 10px;
+}
+
+#donuts-container {
+	display: block;
+	width: 66%;
+	height: 100%;
+	border: 1px solid #000;
+}
+
+#misc-info {
+	flex-grow: 1;
+	display: inline-flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+
+.line-chart {
+	width: 100%;
+	height: 100%;
+}
+
+section {
+	display: flex;
+	box-sizing: border-box;
+	width: 100%;
+	height: 50%;
+	/* overflow: hidden; */
 }
