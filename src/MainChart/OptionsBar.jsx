@@ -1,10 +1,21 @@
+import { useState } from 'react';
 import DatePicker from 'react-date-picker';
-import { tagType, possibleResolutions, predefinedSections } from '../FakeData';
+import { possibleResolutions, predefinedSections } from '../FakeData';
 
 export default function OptionsBar(props) {
+	const [valuesDisplayVisible, setValuesDisplayVisibility] = useState(false);
 	const {
-		currentValues: { summaryVisible, startDate, endDate, currentResolution },
+		currentValues: {
+			summaryVisible,
+			startDate,
+			endDate,
+			currentResolution,
+			desiredValues,
+			dataURL,
+			pricesURL,
+		},
 		buttonActions: {
+			setDesiredValues,
 			showSummary,
 			setResolution,
 			setStartDate,
@@ -13,18 +24,52 @@ export default function OptionsBar(props) {
 			renderNewData,
 		},
 	} = props;
-	const { production, consumption } = tagType;
 	return (
 		<div id="options-bar">
-			<button>Production</button>
-			<button>Consumption</button>
+			<div
+				id="desired-values-container"
+				onMouseLeave={() => {
+					setValuesDisplayVisibility(false);
+				}}
+			>
+				<button
+					id="desired-values-toggle-button"
+					onClick={() => {
+						setValuesDisplayVisibility(!valuesDisplayVisible);
+					}}
+				>
+					Values
+					<i className={`arrow ${valuesDisplayVisible ? 'up' : 'down'}`}></i>
+				</button>
+				<div
+					id="desired-values-content"
+					style={{ display: valuesDisplayVisible ? 'flex' : '' }}
+				>
+					{Object.entries(desiredValues).map(([key, value]) => {
+						return (
+							<button
+								key={key}
+								value={key}
+								className={value ? 'active' : ''}
+								onClick={() => {
+									setDesiredValues({ ...desiredValues, [key]: !value });
+								}}
+							>
+								{key}
+							</button>
+						);
+					})}
+				</div>
+			</div>
 			{Object.entries(predefinedSections)
 				.sort((a, b) => a[1] - b[1])
 				.map(([key, value]) => (
 					<button
 						key={key}
+						className={endDate - startDate === value ? 'active' : ''}
 						value={value}
-						onClick={() => {
+						onClick={(e) => {
+							console.log(e.target);
 							const endDate = new Date();
 							const startDate = new Date(endDate.getTime() - value);
 							setStartDate(startDate);
@@ -49,18 +94,52 @@ export default function OptionsBar(props) {
 						</option>
 					))}
 			</select>
-			<button
+			<div className="dates">
+				<DatePicker
+					onChange={(value) => setStartDate(value)}
+					value={startDate}
+					format="dd-MM-yyyy"
+					maxDate={endDate}
+					clearIcon={null}
+					className={
+						!Object.values(predefinedSections).some(
+							(value) => value === endDate - startDate,
+						)
+							? 'active'
+							: ''
+					}
+				/>
+				<span> - </span>
+				<DatePicker
+					onChange={(value) => setEndDate(value)}
+					value={endDate}
+					format="dd-MM-yyyy"
+					maxDate={new Date()}
+					clearIcon={null}
+					className={
+						!Object.values(predefinedSections).some(
+							(value) => value === endDate - startDate,
+						)
+							? 'active'
+							: ''
+					}
+				/>
+			</div>
+			{/* <button
+				className={summaryVisible ? 'active' : ''}
 				onClick={() => {
 					showSummary(!summaryVisible);
 				}}
 			>
 				Summary
-			</button>
+			</button> */}
 			<button
 				onClick={() => {
 					updateData(
-						startDate.getTime(),
-						endDate.getTime(),
+						dataURL,
+						pricesURL,
+						startDate,
+						endDate,
 						currentResolution,
 						renderNewData,
 					);

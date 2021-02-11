@@ -14,11 +14,21 @@
 	flex-wrap: wrap;
 }
 
-#options-bar * {
+#options-bar *:not(.dates *, .dates, #desired-values-container) {
 	cursor: pointer;
 	border-radius: 5px;
 	border: 1px solid #c1c1c1;
 	padding: 5px;
+	background: none;
+	opacity: 0.8;
+	position: relative;
+}
+
+#options-bar .dates .react-date-picker__wrapper {
+	cursor: pointer;
+	border-radius: 5px;
+	border: 1px solid #c1c1c1;
+	padding: 0 5px;
 	background: none;
 	opacity: 0.8;
 }
@@ -27,8 +37,31 @@
 	opacity: 1;
 }
 
-#options-bar *.active {
-	background-color: blue;
+#options-bar *:not(.dates *, .dates).active,
+#options-bar .dates .active .react-date-picker__wrapper {
+	background-color: #ddd !important;
+}
+
+#options-bar #desired-values-content {
+	background-color: #fff;
+	display: none;
+	position: absolute;
+	top: 100%;
+	left: 0;
+	width: max-content;
+	opacity: 1;
+	flex-flow: column;
+	padding: 0;
+}
+
+#options-bar #desired-values-content > button {
+	margin: 5px;
+}
+
+#options-bar #desired-values-container {
+	position: relative;
+	overflow: visible;
+	z-index: 2;
 }
 
 #options-bar *:focus {
@@ -53,4 +86,38 @@
 	grid-template-rows: 1fr;
 	gap: 0px 0px;
 	grid-template-areas: 'chart summary';
+}
+
+.arrow {
+	border: solid black !important;
+	border-width: 0 2px 2px 0 !important;
+	display: inline-block !important;
+	padding: 2px !important;
+	border-radius: 0 !important;
+	margin: 0 5px;
+	transition-property: transform position;
+	transition-duration: 0.3s;
+	position: relative;
+}
+
+.right {
+	transform: rotate(-45deg);
+	-webkit-transform: rotate(-45deg);
+}
+
+.left {
+	transform: rotate(135deg);
+	-webkit-transform: rotate(135deg);
+}
+
+.up {
+	top: 0;
+	transform: rotate(-135deg);
+	-webkit-transform: rotate(-135deg);
+}
+
+.down {
+	top: -3px;
+	transform: rotate(45deg);
+	-webkit-transform: rotate(45deg);
 }

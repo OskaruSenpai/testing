@@ -2,7 +2,7 @@ import React from 'react';
 import { getDistinctColor, getScaledUnit } from '../FakeData';
 
 export default function SummaryBlock(props) {
-	const { summaryData, showSummary, resolution, selectedBuildings } = props;
+	const { summaryData, selectedBuildings } = props;
 	if (summaryData === undefined) return <></>;
 	const colorPalletSize = summaryData.length;
 	return (

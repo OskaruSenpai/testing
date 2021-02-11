@@ -14,10 +14,8 @@ export const predefinedSections = {
 	'1 year': 3.154e10,
 };
 
-export const tagType = {
-	consumption: 0,
-	production: 1,
-};
+export const tagType = ['energy consumption', 'energy production'];
+
 export const updateInterval = 3.6e6;
 export const possibleResolutions = {
 	hourly: 3.6e6,
@@ -25,7 +23,7 @@ export const possibleResolutions = {
 	weekly: 6.048e8,
 };
 
-const delay = (ms) => new Promise((res) => setTimeout(res, ms));
+export const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
 export function randomValueBetween(min, max) {
 	return Math.random() * (max - min) + min; //The maximum is exclusive and the minimum is inclusive

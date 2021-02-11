@@ -1,4 +1,5 @@
 import Chart from 'echarts-for-react';
+import { getScaledUnit } from './FakeData';
 
 const calculateBarColors = (values) => {
 	return parseFloat(values[0]) > parseFloat(values[1]) ? '#cd3939' : '#42b939';
@@ -27,12 +28,19 @@ const calculateDisplayValues = (values) => {
 };
 
 function Donut(props) {
-	const { data, desc, unit } = props;
+	const { series, desc, unit } = props;
 	const options = {
 		width: '100%',
 		height: '100%',
 		tooltip: {
 			show: true,
+			formatter: (params) => {
+				return getScaledUnit(
+					params.value,
+					unit.substring(0, 2),
+					unit.length <= 2 ? '' : 'h',
+				);
+			},
 		},
 		legend: {
 			show: false,
@@ -48,7 +56,7 @@ function Donut(props) {
 						position: 'center',
 					},
 				},
-				data: calculateDisplayValues(data),
+				data: calculateDisplayValues(series),
 				animation: true,
 				hoverAnimation: false,
 				cursor: 'unset',
@@ -60,13 +68,18 @@ function Donut(props) {
 			},
 		],
 		animation: true,
-		color: ['#008ffb', calculateBarColors(data), '#ccc'],
+		color: ['#008ffb', calculateBarColors(series), '#ccc'],
 	};
 	return (
 		<div className="donut-chart">
 			<div className="donut-data">
 				<h1>
-					{data[0]}
+					{getScaledUnit(
+						series[0],
+						unit.substring(0, 2),
+						unit.length <= 2 ? '' : 'h',
+						false,
+					)}
 					<span>{unit}</span>
 				</h1>
 				<p>{desc}</p>
