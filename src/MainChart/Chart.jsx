@@ -103,7 +103,7 @@ function LineChart(props) {
 			currentResolution,
 			renderNewData,
 		);
-	}, [startDate, endDate, currentResolution]);
+	}, [startDate, endDate, currentResolution, desiredValues]);
 
 	useEffect(() => {
 		const options = (data ?? []).reduce(
@@ -171,6 +171,7 @@ function LineChart(props) {
 						height: '100%',
 						width: '100%',
 					}}
+					// TODO: Figure out how to enable these without losing the smooth animations
 					// onEvents={{
 					// 	dataZoom: (params) => {
 					// 		console.log(params);

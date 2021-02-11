@@ -125,14 +125,14 @@ export default function OptionsBar(props) {
 					}
 				/>
 			</div>
-			{/* <button
+			<button
 				className={summaryVisible ? 'active' : ''}
 				onClick={() => {
 					showSummary(!summaryVisible);
 				}}
 			>
 				Summary
-			</button> */}
+			</button>
 			<button
 				onClick={() => {
 					updateData(

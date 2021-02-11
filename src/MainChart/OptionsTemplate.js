@@ -260,7 +260,7 @@ export function getOptionsTemplate(
 				type: 'inside',
 				realtime: true,
 				xAxisIndex: [0],
-				// start: 50,
+				start: 50,
 				end: 100,
 				minValueSpan: currentResolution * 7,
 			},
@@ -270,19 +270,37 @@ export function getOptionsTemplate(
 }
 
 export const optionsChanger = (acc, { name, data }) => {
-	console.log(name, data);
+	// console.log(name, data);
+	// TODO: Fix this, so it renders the graphs properly
 	const sumGraphs =
 		name !== 'Prices'
 			? [
 					{
 						name,
+						label: {
+							show: true,
+							position: 'inside',
+							rotate: -69,
+							formatter: ({ data }) => {
+								return `${data.toFixed(2)}€`;
+							},
+						},
 						type: 'bar',
-						data: [data.reduce((acc, [, val]) => acc + val, 0), name],
+						// data: [data.reduce((acc, [, val]) => acc + val, 0), name],
+						data: [name, 2],
 						xAxisIndex: 1,
 						yAxisIndex: 2,
 					},
 					{
 						name: name,
+						label: {
+							show: true,
+							position: 'inside',
+							rotate: -69,
+							formatter: ({ data }) => {
+								return `${data} MWh`;
+							},
+						},
 						type: 'bar',
 						data: [name, 2],
 						xAxisIndex: 2,
@@ -290,6 +308,14 @@ export const optionsChanger = (acc, { name, data }) => {
 					},
 					{
 						name: name,
+						label: {
+							show: true,
+							position: 'inside',
+							rotate: -69,
+							formatter: ({ data }) => {
+								return `${data} MW`;
+							},
+						},
 						type: 'bar',
 						data: [name, 2],
 						xAxisIndex: 3,
