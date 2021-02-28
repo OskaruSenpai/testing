@@ -8,13 +8,15 @@ import {
 	getScaledUnit,
 	toggleLoadingScreen,
 	getUsableScreenSize,
-	getDistinctColor,
 	tagType,
 } from '../FakeData';
 
 import { touchHandler, getBufferSize } from './Helpers';
-import { getOptionsTemplate, optionsChanger } from './OptionsTemplate';
-import SummaryBlock from './SummaryBlock';
+import {
+	generateDataset,
+	getOptionsTemplate,
+	optionsChanger,
+} from './OptionsTemplate';
 import OptionsBar from './OptionsBar';
 import './Chart.css';
 import axios from 'axios';
@@ -66,12 +68,6 @@ function LineChart(props) {
 	const { dataURL, pricesURL } = props;
 	const chartRef = useRef(null);
 	const [data, renderNewData] = useState(undefined);
-	const [selectedBuildings, updateSelectedBuildings] = useState(
-		possibleBuildings.reduce((acc, curr) => {
-			acc[curr] = true;
-			return acc;
-		}, {}),
-	);
 
 	const [desiredValues, setDesiredValues] = useState(
 		tagType.reduce((acc, cur, i) => {
@@ -103,13 +99,28 @@ function LineChart(props) {
 			currentResolution,
 			renderNewData,
 		);
-	}, [startDate, endDate, currentResolution, desiredValues]);
+	}, [
+		startDate,
+		endDate,
+		currentResolution,
+		desiredValues,
+		dataURL,
+		pricesURL,
+	]);
 
 	useEffect(() => {
-		const options = (data ?? []).reduce(
-			optionsChanger,
-			getOptionsTemplate(currentResolution, startDate, endDate, summaryVisible),
-		);
+		const dataset = generateDataset(data ?? []);
+		// console.log(dataset);
+		const options = (data ?? []).reduce(optionsChanger, {
+			...getOptionsTemplate(
+				currentResolution,
+				startDate,
+				endDate,
+				summaryVisible,
+			),
+			dataset,
+		});
+		console.log(options);
 		if (chartRef.current !== null)
 			chartRef.current.getEchartsInstance().setOption(options, false, true);
 	}, [data, summaryVisible]);
@@ -131,10 +142,6 @@ function LineChart(props) {
 
 	const dataZoom = (params) => {
 		console.log(params);
-	};
-
-	const legendselectchanged = ({ selected }) => {
-		updateSelectedBuildings(selected);
 	};
 
 	// TODO: zoom & pan event handler

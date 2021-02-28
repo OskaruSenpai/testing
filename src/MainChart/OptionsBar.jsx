@@ -69,7 +69,6 @@ export default function OptionsBar(props) {
 						className={endDate - startDate === value ? 'active' : ''}
 						value={value}
 						onClick={(e) => {
-							console.log(e.target);
 							const endDate = new Date();
 							const startDate = new Date(endDate.getTime() - value);
 							setStartDate(startDate);

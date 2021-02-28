@@ -17,62 +17,64 @@ export function getOptionsTemplate(
 		legend: {
 			data: [],
 		},
-		tooltip: {
-			trigger: 'axis',
-			formatter: (params) => {
-				// if (params.seriesType === 'line') {
-				const [
-					{
-						data: [, priceValue],
-					},
-				] = params.filter(({ seriesName }) => seriesName === 'Prices');
-				const date = new Date(params[0].value[0]);
-				const dd = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate();
-				const mm =
-					date.getMonth() + 1 < 10
-						? `0${date.getMonth() + 1}`
-						: date.getMonth() + 1;
-				let dateLabel;
-				if (currentResolution === 'hourly') {
-					const hh =
-						date.getHours() < 10 ? `0${date.getHours()}` : date.getHours();
-					const min =
-						date.getMinutes() < 10
-							? `0${date.getMinutes()}`
-							: date.getMinutes();
-					dateLabel = `<span style="border-bottom:2px solid #fff">${hh}:${min} ${dd}-${mm} (${
-						date.toString().split(' ')[0]
-					}) | ${priceValue.toFixed(2)} €/MW</span>`;
-				} else {
-					dateLabel = `<span style="border-bottom:2px solid #fff">${dd}-${mm}-${date.getFullYear()} (${
-						date.toString().split(' ')[0]
-					}) | ${priceValue.toFixed(2)} €/MWh</span>`;
-				}
+		tooltip: {},
+		// tooltip: {
+		// 	trigger: 'axis',
+		// 	formatter: (params) => {
+		// 		if (params[0].seriesType === 'line') {
+		// 			const [
+		// 				{
+		// 					data: [, priceValue],
+		// 				},
+		// 			] = params.filter(({ seriesName }) => seriesName === 'Prices');
+		// 			const date = new Date(params[0].value[0]);
+		// 			const dd =
+		// 				date.getDate() < 10 ? `0${date.getDate()}` : date.getDate();
+		// 			const mm =
+		// 				date.getMonth() + 1 < 10
+		// 					? `0${date.getMonth() + 1}`
+		// 					: date.getMonth() + 1;
+		// 			let dateLabel;
+		// 			if (currentResolution === 'hourly') {
+		// 				const hh =
+		// 					date.getHours() < 10 ? `0${date.getHours()}` : date.getHours();
+		// 				const min =
+		// 					date.getMinutes() < 10
+		// 						? `0${date.getMinutes()}`
+		// 						: date.getMinutes();
+		// 				dateLabel = `<span style="border-bottom:2px solid #fff">${hh}:${min} ${dd}-${mm} (${
+		// 					date.toString().split(' ')[0]
+		// 				}) | ${priceValue.toFixed(2)} €/MW</span>`;
+		// 			} else {
+		// 				dateLabel = `<span style="border-bottom:2px solid #fff">${dd}-${mm}-${date.getFullYear()} (${
+		// 					date.toString().split(' ')[0]
+		// 				}) | ${priceValue.toFixed(2)} €/MWh</span>`;
+		// 			}
 
-				return params.reduce((acc, current) => {
-					if (current.seriesName === 'Prices') return acc;
-					return `${acc}<br>${current.marker}${current.seriesName}: ${
-						current.data[1] === null
-							? 'No data'
-							: `${getScaledUnit(
-									current.data[1],
-									'MW',
-									currentResolution === 'hourly' ? '' : 'h',
-							  )}${
-									currentResolution === 'hourly'
-										? ''
-										: ` | ${(current.data[1] * priceValue).toFixed(2)}€`
-							  }`
-					}`;
-				}, dateLabel);
-				// } else {
-				// 	return params.data;
-				// }
-			},
-			axisPointer: {
-				animation: false,
-			},
-		},
+		// 			return params.reduce((acc, current) => {
+		// 				if (current.seriesName === 'Prices') return acc;
+		// 				return `${acc}<br>${current.marker}${current.seriesName}: ${
+		// 					current.data[1] === null
+		// 						? 'No data'
+		// 						: `${getScaledUnit(
+		// 								current.data[1],
+		// 								'MW',
+		// 								currentResolution === 'hourly' ? '' : 'h',
+		// 						  )}${
+		// 								currentResolution === 'hourly'
+		// 									? ''
+		// 									: ` | ${(current.data[1] * priceValue).toFixed(2)}€`
+		// 						  }`
+		// 				}`;
+		// 			}, dateLabel);
+		// 		} else {
+		// 			return params.data;
+		// 		}
+		// 	},
+		// 	axisPointer: {
+		// 		animation: false,
+		// 	},
+		// },
 		grid: [
 			{
 				id: 'main-chart',
@@ -158,7 +160,7 @@ export function getOptionsTemplate(
 				nameGap: -15,
 				show: true,
 				scale: true,
-				type: 'value',
+				type: 'category',
 				gridIndex: 1,
 				splitLine: {
 					show: false,
@@ -176,7 +178,7 @@ export function getOptionsTemplate(
 				nameGap: -15,
 				show: true,
 				scale: true,
-				type: 'value',
+				type: 'category',
 				gridIndex: 2,
 				splitLine: {
 					show: false,
@@ -194,7 +196,7 @@ export function getOptionsTemplate(
 				nameGap: -15,
 				show: true,
 				scale: true,
-				type: 'value',
+				type: 'category',
 				gridIndex: 3,
 				splitLine: {
 					show: false,
@@ -230,25 +232,114 @@ export function getOptionsTemplate(
 				},
 			},
 			{
-				scale: true,
+				seriesLayoutBy: 'row',
 				type: 'value',
+				scale: true,
 				gridIndex: 1,
 				position: 'right',
+				min: 0,
+				max: function (value) {
+					return Math.round(value.max * 1.2);
+				},
 			},
 			{
-				scale: true,
+				seriesLayoutBy: 'row',
 				type: 'value',
+				scale: true,
 				gridIndex: 2,
 				position: 'right',
+				min: 0,
+				max: function (value) {
+					return Math.round(value.max * 1.2);
+				},
 			},
 			{
-				scale: true,
+				seriesLayoutBy: 'column',
 				type: 'value',
+				scale: true,
 				gridIndex: 3,
 				position: 'right',
+				min: 0,
+				max: function (value) {
+					return Math.round(value.max * 1.2);
+				},
 			},
 		],
-		series: [],
+		series: [
+			{
+				legend: {},
+				tooltip: {
+					formatter: ({ data: { houseName, cost } }) => {
+						return `${houseName}: <strong>${cost.toFixed(2)} €</strong>`;
+					},
+				},
+				name: 'Campus',
+				label: {
+					show: true,
+					position: 'inside',
+					rotate: -69,
+					formatter: ({ data: { cost } }) => {
+						return `${cost.toFixed(2)} €`;
+					},
+				},
+				// seriesLayoutBy: 'row',
+				type: 'bar',
+				encode: {
+					x: 'houseName',
+					y: 'cost',
+				},
+				xAxisIndex: 1,
+				yAxisIndex: 2,
+			},
+			{
+				legend: {},
+				tooltip: {
+					formatter: ({ data: { houseName, sum } }) => {
+						return `${houseName}: <strong>${sum.toFixed(2)} MWh</strong>`;
+					},
+				},
+				label: {
+					show: true,
+					position: 'inside',
+					rotate: -69,
+					formatter: ({ data: { sum } }) => {
+						return `${sum.toFixed(2)} MWh`;
+					},
+				},
+				// seriesLayoutBy: 'row',
+				type: 'bar',
+				encode: {
+					x: 'houseName',
+					y: 'sum',
+				},
+				xAxisIndex: 2,
+				yAxisIndex: 3,
+			},
+			{
+				legend: {},
+				tooltip: {
+					formatter: ({ data: { houseName, peak } }) => {
+						return `${houseName}: <strong>${peak.toFixed(2)} MW</strong>`;
+					},
+				},
+				label: {
+					show: true,
+					position: 'inside',
+					rotate: -69,
+					formatter: ({ data: { peak } }) => {
+						return `${peak.toFixed(2)} MW`;
+					},
+				},
+				// seriesLayoutBy: 'row',
+				type: 'bar',
+				encode: {
+					x: 'houseName',
+					y: 'peak',
+				},
+				xAxisIndex: 3,
+				yAxisIndex: 4,
+			},
+		],
 
 		// Enable graph zoom & pan
 		axisPointer: {
@@ -269,60 +360,40 @@ export function getOptionsTemplate(
 	};
 }
 
+export const generateDataset = (rawData) => {
+	// console.log(rawData);
+	if (!rawData) return { source: [] };
+	const prices = rawData.find(({ name }) => name === 'Prices');
+	// console.log(prices);
+	if (!prices) return { source: [] };
+	const parsedPrices = prices.data.reduce((acc, [key, value]) => {
+		acc[key] = value;
+		return acc;
+	}, {});
+
+	const source = [];
+	console.log(parsedPrices, rawData);
+	rawData.forEach(({ name, data }) => {
+		if (name === 'Prices') return;
+		let peak = 0;
+		let cost = 0;
+		const sum = data.reduce((acc, cur) => {
+			if (cur[1] > peak) peak = cur[1];
+			cost += cur[1] * parsedPrices[cur[0]];
+			return acc + cur[1];
+		}, 0);
+		source.push({
+			houseName: name,
+			raw: data,
+			cost,
+			sum,
+			peak,
+		});
+	});
+	return { source };
+};
+
 export const optionsChanger = (acc, { name, data }) => {
-	// console.log(name, data);
-	// TODO: Fix this, so it renders the graphs properly
-	const sumGraphs =
-		name !== 'Prices'
-			? [
-					{
-						name,
-						label: {
-							show: true,
-							position: 'inside',
-							rotate: -69,
-							formatter: ({ data }) => {
-								return `${data.toFixed(2)}€`;
-							},
-						},
-						type: 'bar',
-						// data: [data.reduce((acc, [, val]) => acc + val, 0), name],
-						data: [name, 2],
-						xAxisIndex: 1,
-						yAxisIndex: 2,
-					},
-					{
-						name: name,
-						label: {
-							show: true,
-							position: 'inside',
-							rotate: -69,
-							formatter: ({ data }) => {
-								return `${data} MWh`;
-							},
-						},
-						type: 'bar',
-						data: [name, 2],
-						xAxisIndex: 2,
-						yAxisIndex: 3,
-					},
-					{
-						name: name,
-						label: {
-							show: true,
-							position: 'inside',
-							rotate: -69,
-							formatter: ({ data }) => {
-								return `${data} MW`;
-							},
-						},
-						type: 'bar',
-						data: [name, 2],
-						xAxisIndex: 3,
-						yAxisIndex: 4,
-					},
-			  ]
-			: [];
 	return {
 		...acc,
 		legend: {
@@ -343,6 +414,7 @@ export const optionsChanger = (acc, { name, data }) => {
 				type: 'line',
 				smooth: true,
 				data,
+				tooltip: {},
 				showSymbol: false,
 				connectNulls: false,
 				yAxisIndex: name === 'Prices' ? 1 : 0,
@@ -379,7 +451,6 @@ export const optionsChanger = (acc, { name, data }) => {
 						  }
 						: null,
 			},
-			...sumGraphs,
 		],
 	};
 };

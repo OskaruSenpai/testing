@@ -34,7 +34,7 @@
 }
 
 #options-bar *:hover {
-	opacity: 1;
+	opacity: 1 !important;
 }
 
 #options-bar *:not(.dates *, .dates).active,
