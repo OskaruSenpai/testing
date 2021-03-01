@@ -141,7 +141,6 @@ export function getOptionsTemplate(
 				type: 'value',
 				gridIndex: 1,
 				min: 0,
-				scale: true,
 			},
 		],
 		yAxis: [

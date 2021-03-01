@@ -156,7 +156,7 @@ function LineChart(props) {
 						name,
 						label: {
 							show: true,
-							position: 'inside',
+							position: 'insideLeft',
 							formatter: summaryLabelFormatter,
 						},
 						seriesLayoutBy: 'row',
