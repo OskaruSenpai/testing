@@ -33,6 +33,31 @@ const formatData = (data) => {
 	});
 };
 
+const summaryTooltipFormatter = ({
+	seriesName,
+	data,
+	seriesIndex,
+	name: type,
+}) => {
+	let unit = '€';
+	if (type === 'Sum') {
+		unit = 'MWh';
+	} else if (type === 'Peak') {
+		unit = 'MW';
+	}
+	return `${seriesName}: ${data[seriesIndex - 4].toFixed(2)} ${unit}`;
+};
+
+const summaryLabelFormatter = ({ data, seriesIndex, name: type }) => {
+	let unit = '€';
+	if (type === 'Sum') {
+		unit = 'MWh';
+	} else if (type === 'Peak') {
+		unit = 'MW';
+	}
+	return `${data[seriesIndex - 4].toFixed(2)} ${unit}`;
+};
+
 const updateData = (
 	dataURL,
 	priceURL,
@@ -109,21 +134,44 @@ function LineChart(props) {
 	]);
 
 	useEffect(() => {
-		const dataset = generateDataset(data ?? []);
-		// console.log(dataset);
-		const options = (data ?? []).reduce(optionsChanger, {
+		let options = (data ?? []).reduce(optionsChanger, {
 			...getOptionsTemplate(
 				currentResolution,
 				startDate,
 				endDate,
 				summaryVisible,
 			),
-			dataset,
 		});
+
+		if (summaryVisible) {
+			options.dataset = generateDataset(data ?? []);
+			options.series = options.dataset.source.slice(1).reduce((acc, [name]) => {
+				return [
+					...acc,
+					{
+						legend: {},
+						tooltip: {
+							formatter: summaryTooltipFormatter,
+						},
+						name,
+						label: {
+							show: true,
+							position: 'inside',
+							formatter: summaryLabelFormatter,
+						},
+						seriesLayoutBy: 'row',
+						type: 'bar',
+						xAxisIndex: 1,
+						yAxisIndex: 2,
+					},
+				];
+			}, options.series);
+		}
 		console.log(options);
+
 		if (chartRef.current !== null)
 			chartRef.current.getEchartsInstance().setOption(options, false, true);
-	}, [data, summaryVisible]);
+	}, [data, summaryVisible, startDate, endDate, currentResolution]);
 
 	// Calculate the inital options only once
 	const options = useMemo(
@@ -180,10 +228,7 @@ function LineChart(props) {
 					}}
 					// TODO: Figure out how to enable these without losing the smooth animations
 					// onEvents={{
-					// 	dataZoom: (params) => {
-					// 		console.log(params);
-					// 	},
-					// 	legendselectchanged,
+					// 	dataZoom,
 					// }}
 				/>
 			</div>

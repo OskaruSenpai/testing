@@ -85,27 +85,11 @@ export function getOptionsTemplate(
 				containLabel: true,
 			},
 			{
-				id: 'cost-chart',
+				id: 'summary-chart',
 				right: showSummary ? '3%' : '-15%',
 				width: showSummary ? '15%' : 0,
-				height: '23%',
+				bottom: '14%',
 				top: '5%',
-				containLabel: true,
-			},
-			{
-				id: 'peak-chart',
-				right: showSummary ? '3%' : '-15%',
-				width: showSummary ? '15%' : 0,
-				height: '23%',
-				top: '32%',
-				containLabel: true,
-			},
-			{
-				id: 'sum-chart',
-				right: showSummary ? '3%' : '-15%',
-				width: showSummary ? '15%' : 0,
-				height: '23%',
-				top: '59%',
 				containLabel: true,
 			},
 		],
@@ -154,58 +138,10 @@ export function getOptionsTemplate(
 				},
 			},
 			{
-				name: 'Cost',
-				nameLocation: 'center',
-				position: 'top',
-				nameGap: -15,
-				show: true,
-				scale: true,
-				type: 'category',
+				type: 'value',
 				gridIndex: 1,
-				splitLine: {
-					show: false,
-				},
-				axisLine: { show: false, symbol: 'none' },
-				axisTick: {
-					show: false,
-				},
-				axisLabel: { show: false },
-			},
-			{
-				name: 'Sum',
-				nameLocation: 'center',
-				position: 'top',
-				nameGap: -15,
-				show: true,
+				min: 0,
 				scale: true,
-				type: 'category',
-				gridIndex: 2,
-				splitLine: {
-					show: false,
-				},
-				axisLine: { show: false, symbol: 'none' },
-				axisTick: {
-					show: false,
-				},
-				axisLabel: { show: false },
-			},
-			{
-				name: 'Peak',
-				nameLocation: 'center',
-				position: 'top',
-				nameGap: -15,
-				show: true,
-				scale: true,
-				type: 'category',
-				gridIndex: 3,
-				splitLine: {
-					show: false,
-				},
-				axisLine: { show: false, symbol: 'none' },
-				axisTick: {
-					show: false,
-				},
-				axisLabel: { show: false },
 			},
 		],
 		yAxis: [
@@ -232,114 +168,13 @@ export function getOptionsTemplate(
 				},
 			},
 			{
-				seriesLayoutBy: 'row',
-				type: 'value',
-				scale: true,
+				type: 'category',
+				// scale: true,
 				gridIndex: 1,
-				position: 'right',
-				min: 0,
-				max: function (value) {
-					return Math.round(value.max * 1.2);
-				},
-			},
-			{
-				seriesLayoutBy: 'row',
-				type: 'value',
-				scale: true,
-				gridIndex: 2,
-				position: 'right',
-				min: 0,
-				max: function (value) {
-					return Math.round(value.max * 1.2);
-				},
-			},
-			{
-				seriesLayoutBy: 'column',
-				type: 'value',
-				scale: true,
-				gridIndex: 3,
-				position: 'right',
-				min: 0,
-				max: function (value) {
-					return Math.round(value.max * 1.2);
-				},
+				inverse: true,
 			},
 		],
-		series: [
-			{
-				legend: {},
-				tooltip: {
-					formatter: ({ data: { houseName, cost } }) => {
-						return `${houseName}: <strong>${cost.toFixed(2)} €</strong>`;
-					},
-				},
-				name: 'Campus',
-				label: {
-					show: true,
-					position: 'inside',
-					rotate: -69,
-					formatter: ({ data: { cost } }) => {
-						return `${cost.toFixed(2)} €`;
-					},
-				},
-				// seriesLayoutBy: 'row',
-				type: 'bar',
-				encode: {
-					x: 'houseName',
-					y: 'cost',
-				},
-				xAxisIndex: 1,
-				yAxisIndex: 2,
-			},
-			{
-				legend: {},
-				tooltip: {
-					formatter: ({ data: { houseName, sum } }) => {
-						return `${houseName}: <strong>${sum.toFixed(2)} MWh</strong>`;
-					},
-				},
-				label: {
-					show: true,
-					position: 'inside',
-					rotate: -69,
-					formatter: ({ data: { sum } }) => {
-						return `${sum.toFixed(2)} MWh`;
-					},
-				},
-				// seriesLayoutBy: 'row',
-				type: 'bar',
-				encode: {
-					x: 'houseName',
-					y: 'sum',
-				},
-				xAxisIndex: 2,
-				yAxisIndex: 3,
-			},
-			{
-				legend: {},
-				tooltip: {
-					formatter: ({ data: { houseName, peak } }) => {
-						return `${houseName}: <strong>${peak.toFixed(2)} MW</strong>`;
-					},
-				},
-				label: {
-					show: true,
-					position: 'inside',
-					rotate: -69,
-					formatter: ({ data: { peak } }) => {
-						return `${peak.toFixed(2)} MW`;
-					},
-				},
-				// seriesLayoutBy: 'row',
-				type: 'bar',
-				encode: {
-					x: 'houseName',
-					y: 'peak',
-				},
-				xAxisIndex: 3,
-				yAxisIndex: 4,
-			},
-		],
+		series: [],
 
 		// Enable graph zoom & pan
 		axisPointer: {
@@ -361,18 +196,15 @@ export function getOptionsTemplate(
 }
 
 export const generateDataset = (rawData) => {
-	// console.log(rawData);
 	if (!rawData) return { source: [] };
 	const prices = rawData.find(({ name }) => name === 'Prices');
-	// console.log(prices);
 	if (!prices) return { source: [] };
 	const parsedPrices = prices.data.reduce((acc, [key, value]) => {
 		acc[key] = value;
 		return acc;
 	}, {});
 
-	const source = [];
-	console.log(parsedPrices, rawData);
+	const source = [['houseName', 'Cost', 'Sum', 'Peak']];
 	rawData.forEach(({ name, data }) => {
 		if (name === 'Prices') return;
 		let peak = 0;
@@ -382,13 +214,8 @@ export const generateDataset = (rawData) => {
 			cost += cur[1] * parsedPrices[cur[0]];
 			return acc + cur[1];
 		}, 0);
-		source.push({
-			houseName: name,
-			raw: data,
-			cost,
-			sum,
-			peak,
-		});
+
+		source.push([name, cost, sum, peak]);
 	});
 	return { source };
 };
